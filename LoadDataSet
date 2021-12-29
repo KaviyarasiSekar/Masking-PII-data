@@ -1,0 +1,9 @@
+Publicly available datasets are figuredout.
+The datasets are publicly available:
+    Use following credentials to connect using MYSQL workbench:
+          hostname: relational.fit.cvut.cz
+          port: 3306
+          username: guest
+          password: relational
+          
+Analyse the columns 
