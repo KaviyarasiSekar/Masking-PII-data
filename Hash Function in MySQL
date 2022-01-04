@@ -1,0 +1,2 @@
+// Write a Myql query for Hash Function
+select EmailAddress, concat(concat(md5(substring_index(EmailAddress, '@' , 1)),'@') , md5(substring_index(EmailAddress, '@' , -1))) AS EmailAddress_Changed from AdventureWorks2014.EmailAddress rand limit 100;
