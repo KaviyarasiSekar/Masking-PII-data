@@ -1,2 +1,4 @@
 // Write a Myql query for Hash Function
+// The MySQL MD5 function is used to return an MD5 128-bit checksum representation of a string. The MD5 message-digest algorithm is a widely used hash function producing a 128-bit hash value. The value returned by the MD5 function is a binary string of 32 hexadecimal digits, or NULL if the argument was NULL.
+
 select EmailAddress, concat(concat(md5(substring_index(EmailAddress, '@' , 1)),'@') , md5(substring_index(EmailAddress, '@' , -1))) AS EmailAddress_Changed from AdventureWorks2014.EmailAddress rand limit 100;
