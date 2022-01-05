@@ -1,0 +1,34 @@
+//Mask Email Id using Standard Hash & SHA26 Hash function
+use AdventureWorks2014;
+CREATE OR REPLACE function f_MaskEmail(EmailAddress nvarchar(max))
+return nvarchar(max)
+as
+
+ v_masked nvarchar(max);
+ v_ori nvarchar(max);
+
+begin
+if nvl(trim(EmailAddress), '') = '' then
+return EmailAddress;
+end if;
+
+ v_ori := EmailAddress from emailaddress;
+ EmailAddress := nvl(trim(EmailAddress), '') from emailaddress;
+
+ v_masked := NVL2(EmailAddress,CAST(STANDARD_HASH( replace(EmailAddress, substr(EmailAddress, instr(EmailAddress,'@',1))), 'SHA256') AS NVARCHAR(255)), EmailAddress) from emailaddress;
+
+
+if v_masked = v_ori then
+ v_masked :=  NVL2(EmailAddress,reverse(CAST(STANDARD_HASH(replace(EmailAddress, substr(EmailAddress, instr(EmailAddress,'@',1))), 'SHA256') AS NVARCHAR(255))), EmailAddress) from emailaddress; 
+end if;
+
+ v_masked :=  lower(v_masked) || '@arigo.co.uk' from emailaddress;
+	
+
+if v_masked = v_ori or v_masked = EmailAddress then
+ v_masked := N'xxx' from emailaddress;
+end if;
+
+return lower(v_masked);
+
+end;
