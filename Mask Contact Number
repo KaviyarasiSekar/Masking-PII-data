@@ -1,0 +1,35 @@
+use Bench;
+CREATE OR REPLACE function f_MaskContactNumber(PHONENUMBER nvarchar(max))
+return nvarchar(max)
+as
+
+ v_masked nvarchar(max);
+ v_ori nvarchar(max);
+
+begin
+ 
+if nvl(trim(PHONENUMBER), '') = '' then
+return PHONENUMBER;
+end if;
+
+ v_ori := PHONENUMBER from PERSONPHONE;
+ PHONENUMBER := nvl(trim(PHONENUMBER), '') from PERSONPHONE;
+
+ v_masked := NVL2(PHONENUMBER,REPLACE( REPLACE( REPLACE( REPLACE( REPLACE( REPLACE( CAST(RawToHex( STANDARD_HASH(PHONENUMBER, 'SHA2_256')) AS NVARCHAR(33)), 'A', '10'), 'B', '11'), 'C', '12'), 'D', '13'), 'E', '14'), 'F', '15'),PHONENUMBER) from PERSONPHONE;
+ 
+
+if v_masked = v_ori then
+ v_masked :=  NVL2(PHONENUMBER,REPLACE( REPLACE( REPLACE( REPLACE( REPLACE( REPLACE( REVERSE(CAST(RawToHex( STANDARD_HASH(PHONENUMBER, 'SHA2_256')) AS NVARCHAR(33))), 'A', '10'), 'B', '11'), 'C', '12'), 'D', '13'), 'E', '14'), 'F', '15'),PHONENUMBER) from PERSONPHONE;
+ 
+end if;
+
+v_masked :=  cast(v_masked as NUMBER) from PERSONPHONE;
+
+
+if v_masked = v_ori or v_masked = PHONENUMBER then
+ v_masked := N'xxx' from dual;
+end if;
+
+return lower(v_masked);
+
+end;
