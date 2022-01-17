@@ -1,34 +1,25 @@
-//Mask Email Id using Standard Hash & SHA26 Hash function
-use AdventureWorks2014;
-CREATE OR REPLACE function f_MaskEmail(EmailAddress nvarchar(max))
-return nvarchar(max)
-as
-
- v_masked nvarchar(max);
- v_ori nvarchar(max);
-
-begin
-if nvl(trim(EmailAddress), '') = '' then
-return EmailAddress;
-end if;
-
- v_ori := EmailAddress from emailaddress;
- EmailAddress := nvl(trim(EmailAddress), '') from emailaddress;
-
- v_masked := NVL2(EmailAddress,CAST(STANDARD_HASH( replace(EmailAddress, substr(EmailAddress, instr(EmailAddress,'@',1))), 'SHA256') AS NVARCHAR(255)), EmailAddress) from emailaddress;
+//Mask Email Id using Standard Hash & UNHEX Hash function
+use adventureworks2014;
+CREATE TABLE `emailaddress_mask` (
+   `BusinessEntityID` int(11) NOT NULL,
+   `EmailAddressID` int(11) NOT NULL AUTO_INCREMENT,
+   `EmailAddress` varchar(150) DEFAULT NULL,
+   `rowguid` varchar(64) NOT NULL,
+   `ModifiedDate` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+   PRIMARY KEY (`EmailAddressID`,`BusinessEntityID`),
+   KEY `IX_EmailAddress_EmailAddress` (`EmailAddress`),
+   KEY `FK_EmailAddress_Person_BusinessEntityID` (`BusinessEntityID`),
+   KEY `GUID_EmailAddress` (`rowguid`)
+ ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
 
-if v_masked = v_ori then
- v_masked :=  NVL2(EmailAddress,reverse(CAST(STANDARD_HASH(replace(EmailAddress, substr(EmailAddress, instr(EmailAddress,'@',1))), 'SHA256') AS NVARCHAR(255))), EmailAddress) from emailaddress; 
-end if;
+insert into emailaddress_mask(BusinessEntityID,EmailAddressID,EmailAddress,rowguid,ModifiedDate) select BusinessEntityID,EmailAddressID
+,concat(SHA1(UNHEX(SHA1(substring_index(EmailAddress,'@',1)))) , '@maskedmailid.com'),rowguid,ModifiedDate from emailaddress;
 
- v_masked :=  lower(v_masked) || '@arigo.co.uk' from emailaddress;
-	
 
-if v_masked = v_ori or v_masked = EmailAddress then
- v_masked := N'xxx' from emailaddress;
-end if;
+UNHEX() function in MySQL is used to convert the Hexadecimal number into the bytes represented by the Number. The value returned by it is a binary string.
+It returns a binary string. If non-hexadecimal digits are provided this function returns NULL.
 
-return lower(v_masked);
-
-end;
+SHA1 :- 
+The MySQL SHA1() function is used for encrypting a string using the SHA-1 technique.
+The SHA1 stands for secure hash algorithm and it produces a 160-bit checksum for a user inputted string. 
