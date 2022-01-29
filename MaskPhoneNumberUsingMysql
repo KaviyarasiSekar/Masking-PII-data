@@ -1,0 +1,11 @@
+use adventureworks2014;
+drop table personphone_mask;
+CREATE TABLE `personphone_mask` (
+   `BusinessEntityID` int(11) NOT NULL,
+   `PhoneNumber` varchar(500) DEFAULT NULL,
+   `PhoneNumberTypeID` int(11) NOT NULL ,
+   `ModifiedDate` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+   KEY `BusinessEntityID` (`BusinessEntityID`),
+   KEY `IX_personphone_personphone` (`PhoneNumber`)
+ ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+
