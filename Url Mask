@@ -1,0 +1,17 @@
+use adventureworks2014;
+drop table vendor_mask;
+CREATE TABLE `vendor_mask` (
+   `BusinessEntityID` int(11) NOT NULL,
+   `AccountNumber` varchar(30) NOT NULL,
+   `Name` varchar(100) NOT NULL,
+   `CreditRating` int(3) NOT NULL,
+   `PreferredVendorStatus` int(1) NOT NULL DEFAULT '1',
+   `ActiveFlag` tinyint(1) NOT NULL DEFAULT '1',
+   `PurchasingWebServiceURL` varchar(1024) DEFAULT NULL,
+   `ModifiedDate` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+   PRIMARY KEY (`BusinessEntityID`),
+   UNIQUE KEY `AK_Vendor_AccountNumber` (`AccountNumber`)
+ ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+
+insert into vendor_mask(BusinessEntityID,AccountNumber,Name,CreditRating,PreferredVendorStatus,ActiveFlag,PurchasingWebServiceURL,ModifiedDate) select BusinessEntityID,AccountNumber,Name,CreditRating,PreferredVendorStatus,ActiveFlag,lower(concat('http://',concat(SHA1(UNHEX(SHA1(PurchasingWebServiceURL))) , '.maskedurl'))),ModifiedDate from vendor;
+
