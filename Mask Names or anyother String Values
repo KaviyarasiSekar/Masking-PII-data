@@ -1,0 +1,30 @@
+use adventureworks2014;
+drop table Person_mask;
+CREATE TABLE `Person_mask` (
+   `BusinessEntityID` int(11) NOT NULL,
+   `PersonType` char(2) NOT NULL,
+   `NameStyle` tinyint(1) NOT NULL DEFAULT '0',
+   `Title` varchar(8) DEFAULT NULL,
+   `FirstName` varchar(100) NOT NULL,
+   `MiddleName` varchar(100) DEFAULT NULL,
+   `LastName` varchar(100) NOT NULL,
+   `Suffix` varchar(10) DEFAULT NULL,
+   `EmailPromotion` int(11) NOT NULL DEFAULT '0',
+   `AdditionalContactInfo` text,
+   `Demographics` text,
+   `rowguid` varchar(64) NOT NULL,
+   `ModifiedDate` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+   PRIMARY KEY (`BusinessEntityID`),
+   UNIQUE KEY `AK_Person_rowguid` (`rowguid`),
+   KEY `IX_Person_LastName_FirstName_MiddleName` (`LastName`,`FirstName`,`MiddleName`),
+   KEY `PXML_Person_AddContact` (`AdditionalContactInfo`(255)),
+   KEY `PXML_Person_Demographics` (`Demographics`(255)),
+   KEY `XMLPATH_Person_Demographics` (`Demographics`(255)),
+   KEY `XMLPROPERTY_Person_Demographics` (`Demographics`(255)),
+   KEY `XMLVALUE_Person_Demographics` (`Demographics`(255)),
+   KEY `GUID_Person` (`rowguid`)
+ ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+ 
+
+insert into Person_mask(BusinessEntityID,PersonType,NameStyle,Title,FirstName,MiddleName,LastName,Suffix,EmailPromotion,AdditionalContactInfo,Demographics,rowguid,ModifiedDate) select BusinessEntityID,PersonType,NameStyle,Title,SHA1(FirstName),SHA1(MiddleName),SHA1(LastName),Suffix,EmailPromotion,AdditionalContactInfo,Demographics,rowguid,ModifiedDate from Person;
+
