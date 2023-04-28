@@ -1,8 +1,5 @@
-system setup : 
-  New Version(8.0.27) Mysql Installation & Microsoft Visual C++ 2019 Redistributable (x64) Installation due to Amazon RDS Connection Issue
+Snowflake Free Account Creation.
 Amazon Setup :
   Amazon Free tier Account Creation.
 
-How to Connect AWS RDS with MySQL Workbench | Getting started with AWS RDS and MySQL.
-  Ref. https://www.youtube.com/watch?v=fhDhfG9MEF8
- 
+Amazon for loading data from s3
