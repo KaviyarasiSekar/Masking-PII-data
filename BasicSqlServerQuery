@@ -1,6 +1,0 @@
-// Installed SQL Server & SSMS
-Download Link :- https://www.microsoft.com/en-us/search/explore?q=SQL2012_x64_ENU
-SQL Server - Database
-SSMS - code editor
-//Have tried Basic SQL Query for PII Email Address Mask
-select * from openquery([EDW_DEV1_OCI_RO] , 'select EmailAddress,			NVL2(EmailAddress,CAST(STANDARD_HASH( replace(EmailAddress, substr(EmailAddress, instr(EmailAddress,''@'',1))), ''SHA256'') AS nvarchar(255)),EmailAddress)	|| ''@reedexpo.co.uk'' AS mail from AdventureWorks2014.EmailAddress');
